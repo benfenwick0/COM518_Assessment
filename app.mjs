@@ -43,3 +43,5 @@ app.use(expressSession({
         httpOnly: false // allow client-side code to access the cookie, otherwise it's kept to the HTTP messages
     }
 }));
+
+app.listen(3000);
