@@ -4,9 +4,47 @@
     <script type="text/javascript" src="index.js" defer></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/styles/style.css" rel="stylesheet" type="text/css"/> 
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+    <link rel='stylesheet' href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css' />
     <title>Places to Stay</title>
 </head>
-<body>
-    <h1>Hello World</h1>
-</body>
+    <body>
+
+        <form id="login_form">
+            <h2 id="title">SIGN IN</h2>
+            <div>
+                <input class="rounded-box" placeholder="Username" type="text" id="username" name="username">
+            </div>
+            
+            <div>
+                <input class="rounded-box" placeholder="Password" type="password" id="password" name="password">
+            </div>
+            <button id="login_button" type="button" >Login</button>
+        </form>
+
+        <div id="loggedinStatus">
+            <p id="loggedinmessage"></p>
+            <button id="logout_Button" type="button">Logout</button>
+        </div>
+
+        <form id="searchFormdiv">
+            <p>Search for a Place to Stay by location:</p>
+            <div>
+                <input class="rounded-box" id="locationSearch" type="text" placeholder="Location" name="locationSearch">
+            </div>
+
+            <div>
+                <button id="locationButton" type="button">Search</button>
+            </div>
+
+            <div id="location_results"></div>
+
+            <div id="map"></div>
+        </form>
+
+        <br>
+
+
+    </body>
 </html>

@@ -1,0 +1,146 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+
+*
+{
+    font-family: 'Quicksand';
+}
+
+
+body{
+    background-color: rgb(35, 35, 35);
+}
+
+p, h1, h2{
+    color: #EEEEEE
+}
+
+#login_form{
+    justify-content: center;
+    text-align: center;
+    border-style: solid;
+    border-radius: 5px;
+    border-color: rgb(40, 40, 40);
+    width: 300px;
+    margin: auto;
+    background-color: rgb(40, 40, 40);
+    padding: 25px;
+    margin-top: 75px;
+}
+
+#title{
+    font-size: 40px;
+    margin: auto;
+    padding-bottom: 30px;
+    color: #76ABAE;
+}
+
+#login_button{
+    font-family: 'Quicksand';
+    font-size: 15px;
+    background-color: #76ABAE;
+    color: #EEEEEE;
+    border: 1px solid;
+    border-color: #76ABAE;
+    width: 275px;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 8px;
+}
+
+#login_button{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#login_button:hover{
+    border: 1px solid;
+    border-color: rgb(75, 75, 75);
+}
+
+
+.rounded-box { 
+    width: auto; 
+    padding: 10px; 
+    border: 1px solid; /* A calming blue border */
+    border-color: rgb(75, 75, 75);
+    border-radius: 5px; /* The secret ingredient for rounded corners */ 
+    outline: none; /* No outlines, we're keeping it smooth */ 
+    font-size: 15px; /* Just the right font size */ 
+    color: #EEEEEE; /* A subtle text color */
+    background-color: rgb(75, 75, 75);
+    margin: 8px;
+    width: 250px; 
+} 
+
+.rounded-box:hover {
+    border: 1px solid; 
+    border-color: #76ABAE; /* A pleasant green border on hover */ 
+} 
+
+
+#searchFormdiv{
+    justify-content: center;
+    text-align: center;
+    border-style: solid;
+    border-radius: 5px;
+    border-color: rgb(40, 40, 40);
+    width: 300px;
+    margin: auto;
+    background-color: rgb(40, 40, 40);
+    padding: 25px;
+    margin-top: 35px;
+}
+
+#locationButton{
+    font-family: 'Quicksand';
+    font-size: 15px;
+    background-color: #76ABAE;
+    color: #EEEEEE;
+    border: 1px solid;
+    border-color: #76ABAE;
+    width: 275px;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 8px;
+}
+
+#locationButton{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#locationButton:hover{
+    border: 1px solid;
+    border-color: rgb(75, 75, 75);
+}
+
+#loggedinStatus{
+    justify-content: center;
+    text-align: center;
+    border-style: solid;
+    border-radius: 5px;
+    border-color: rgb(40, 40, 40);
+    width: 200px;
+    margin: auto;
+    background-color: rgb(40, 40, 40);
+    padding: 5px;
+    margin-top: 15px;
+}
+
+#logout_Button{
+    font-family: 'Quicksand';
+    font-size: 15px;
+    background-color: #76ABAE;
+    color: #EEEEEE;
+    border: 1px solid;
+    border-color: #76ABAE;
+    width: 75px;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 2px;
+}
+
+#logout_Button:hover{
+    border: 1px solid;
+    border-color: rgb(75, 75, 75);
+}

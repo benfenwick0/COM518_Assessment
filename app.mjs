@@ -6,42 +6,109 @@ import betterSqlite3Session from 'express-session-better-sqlite3';
 const app = express();
 
 app.use(express.json());
-
+    
 app.use(express.static('public'));
 
 const db = new Database("placestostay.db")
 const SqliteStore = betterSqlite3Session(expressSession, db);
 
 app.use(expressSession({
-    // Specify the session store to be used.
     store: new SqliteStore(), 
-
-    // a secret used to digitally sign session cookie, use something unguessable (e.g. random bytes as hex) in a real application.
     secret: 'BinnieAndClyde', 
-
-    // regenerate session on each request (keeping the session active)
     resave: true, 
-
-    // save session to store before data is stored in it (disabled as this unnecessarily creates empty sessions)
     saveUninitialized: false, 
-
-    // reset cookie for every HTTP response. The cookie expiration time will be reset, to 'maxAge' milliseconds beyond the time of the response. 
-    // Thus, the session cookie will expire after 10 mins of *inactivity* (no HTTP request made and consequently no response sent) when 'rolling' is true.
-    // If 'rolling' is false, the session cookie would expire after 10 minutes even if the user was interacting with the site, which would be very
-    // annoying - so true is the sensible setting.
     rolling: true, 
-
-    // destroy session (remove it from the data store) when it is set to null, deleted etc
     unset: 'destroy', 
-
-    // useful if using a proxy to access your server, as you will probably be doing in a production environment: this allows the session cookie to pass through the proxy
     proxy: true, 
-
-    // properties of session cookie
     cookie: { 
-        maxAge: 600000, // 600000 ms = 10 mins expiry time
-        httpOnly: false // allow client-side code to access the cookie, otherwise it's kept to the HTTP messages
+        maxAge: 600000,
+        httpOnly: false 
     }
 }));
 
-app.listen(3000);
+
+//Search by Location
+app.get('/location/:location', (req,res) => {
+    try{
+        const stmt = db.prepare('SELECT * FROM accommodation WHERE location = ?')
+        const results = stmt.all(req.params.location);
+        res.json(results);
+    }
+    catch(error){
+        res.status(500).json({error: error});
+    }
+});
+
+
+// Search by type and location
+app.get('/type/:type/location/:location', (req, res) => {
+    try {
+        const stmt = db.prepare('SELECT * FROM accommodation WHERE type=? AND location=?');
+        const results = stmt.all(req.params.type, req.params.location);
+        res.json(results);
+    } catch(error) {
+        res.status(500).json({error: error});
+    }
+});
+
+app.use((req,res,next)=>{
+	console.log("Session is");
+	console.log(req.session);
+	next();
+});
+
+
+
+app.post('/book-accommodation', (req, res) => {
+    try {
+        if(!req.body.accommodation_id || !req.body.num_people || !req.body.date){
+            res.status(400).json({error: 'Missing details. Please make sure all information is inputted correctly!'});
+        } else {
+            // Insert record into acc_bookings table
+            const insertBookingStmt = db.prepare('INSERT INTO acc_bookings (accID, npeople, username, thedate) VALUES (?, ?, ?, ?)');
+            const info = insertBookingStmt.run(req.body.accommodation_id, req.body.num_people, req.session.username, req.body.date);
+
+            // Reduce availability in the acc_dates table
+            const updateAvailabilityStmt = db.prepare('UPDATE acc_dates SET availability = availability - 1 WHERE accID = ? AND thedate = ?');
+            updateAvailabilityStmt.run(req.body.accommodation_id, req.body.date);
+
+            res.json({ message: 'Accommodation booked successfully!', id: info.lastInsertRowid }); 
+        }
+    } catch (error) {
+        res.status(500).json({ error: error});
+    }
+});
+
+
+
+
+//Login POST 
+app.post('/login', (req,res)=>{
+	
+	const stmt = db.prepare('SELECT * FROM acc_users WHERE username=? and password=?')
+	const results = stmt.all(req.body.username, req.body.password);
+	
+	if(results.length == 1){
+		req.session.username = results[0].username;
+		res.json({"username": req.body.username});
+	} else{
+		res.status(401).json({error: "Incorrect login!"});
+	}
+	
+});
+
+//Login GET
+app.get('/login', (req,res)=>{
+	res.json({username: req.session.username || null});
+});
+
+
+//Logout POST route
+app.post('/logout', (req,res)=>{
+	req.session = null;
+	res.json({'success': 1});
+});
+
+app.listen(3000, ()=>{
+    console.log('Server is running on port 3000');
+});
