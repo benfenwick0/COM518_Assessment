@@ -1,16 +1,3 @@
-import 'leaflet';
-
-const map = L.map("map1");
-
-const attrib="Map data copyright OpenStreetMap contributors, Open Database Licence";
-
-const tileLayer = L.tileLayer(
-        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-            { attribution: attrib }
-).addTo(map);
-
-
-
 const loginStatus = async()=>{
     try{
         const response = await fetch('/login');
@@ -90,14 +77,25 @@ document.getElementById("locationButton").addEventListener("click", e=>{
     const location = document.getElementById("locationSearch").value;
     ajaxSearch(location);
 });
-;
+
+
+// Set up an array to store the markers
+let markers = [];
 
 async function ajaxSearch(location){
+
+
 
     const ajaxResponse = await fetch(`/location/${location}`);
     const accoms = await ajaxResponse.json();
 
+    // Clear existing markers from the map
+    markers.forEach(marker => {
+        map.removeLayer(marker);
+    });
 
+    //clear the array
+    markers = [];
 
     //To clear exisiting results to prevent them stacking
     document.getElementById("location_results").innerHTML = '';
@@ -123,6 +121,7 @@ async function ajaxSearch(location){
             buttonElement.setAttribute("value", "Book now");
             buttonElement.addEventListener ("click", async()=>{
 			
+
                 try{
                     const response = await fetch(`/book-accommodation`,{
                         method: 'POST',
@@ -156,6 +155,12 @@ async function ajaxSearch(location){
             });
             paragraph.appendChild(entryContainer);
             paragraph.appendChild(buttonElement);
+
+            const marker = L.marker([accom.latitude, accom.longitude])
+                .addTo(map)
+                .bindPopup(`<b>${accom.name}</b><br>${accom.description}`)
+                .openPopup();
+            markers.push(marker);
         
     });
     document.getElementById("searchFormdiv").style.width = '750px';
@@ -163,48 +168,11 @@ async function ajaxSearch(location){
 
 
 
+var map = L.map('map').setView([0,0], 1);
 
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{
+    attribution: 'Map data copyright OpenStreetMap contributors, Open Database Licence'
+}).addTo(map);
 
+map.setView([40.75, -74], 14);
 
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-document.getElementById("bookingForm").addEventListener("submit", async() =>{
-    const accbooking = {
-        "accomodation_id": document.getElementById("accomodation_id").value,
-        "num_people": document.getElementById("num_people").value,
-        "date": document.getElementById("date").value
-    };
-
-    try{
-
-        const response = await fetch('/book-accommodation', {
-            method: 'POST',
-            headers:{
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(accbooking)
-        });
-                // Handle the status returned from the server
-        if(response.status == 200) {
-            alert("Successfully added");
-        } else if (response.status == 400) {
-            alert("Blank fields");
-        } else {
-            alert(`Unknown error: code ${response.status}`);
-        }
-    } catch(e) {
-        alert(`Error: ${e}`);
-    }
-});
-*/

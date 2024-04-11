@@ -61,18 +61,22 @@ app.use((req,res,next)=>{
 
 app.post('/book-accommodation', (req, res) => {
     try {
-        if(!req.body.accommodation_id || !req.body.num_people || !req.body.date){
-            res.status(400).json({error: 'Missing details. Please make sure all information is inputted correctly!'});
-        } else {
-            // Insert record into acc_bookings table
-            const insertBookingStmt = db.prepare('INSERT INTO acc_bookings (accID, npeople, username, thedate) VALUES (?, ?, ?, ?)');
-            const info = insertBookingStmt.run(req.body.accommodation_id, req.body.num_people, req.session.username, req.body.date);
+        if(!req.session || !req.session.username){
+            res.status(401).json({error: "Unauthorized: No user logged in"});
+        } else{
+            if(!req.body.accommodation_id || !req.body.num_people || !req.body.date){
+                res.status(400).json({error: 'Missing details. Please make sure all information is inputted correctly!'});
+            } else {
+                // Insert record into acc_bookings table
+                const insertBookingStmt = db.prepare('INSERT INTO acc_bookings (accID, npeople, username, thedate) VALUES (?, ?, ?, ?)');
+                const info = insertBookingStmt.run(req.body.accommodation_id, req.body.num_people, req.session.username, req.body.date);
 
-            // Reduce availability in the acc_dates table
-            const updateAvailabilityStmt = db.prepare('UPDATE acc_dates SET availability = availability - 1 WHERE accID = ? AND thedate = ?');
-            updateAvailabilityStmt.run(req.body.accommodation_id, req.body.date);
+                // Reduce availability in the acc_dates table
+                const updateAvailabilityStmt = db.prepare('UPDATE acc_dates SET availability = availability - 1 WHERE accID = ? AND thedate = ?');
+                updateAvailabilityStmt.run(req.body.accommodation_id, req.body.date);
 
-            res.json({ message: 'Accommodation booked successfully!', id: info.lastInsertRowid }); 
+                res.json({ message: 'Accommodation booked successfully!', id: info.lastInsertRowid }); 
+            }
         }
     } catch (error) {
         res.status(500).json({ error: error});

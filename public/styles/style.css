@@ -144,3 +144,30 @@ p, h1, h2{
     border: 1px solid;
     border-color: rgb(75, 75, 75);
 }
+
+#buyButton{
+    font-family: 'Quicksand';
+    font-size: 15px;
+    background-color: #76ABAE;
+    color: #EEEEEE;
+    border: 1px solid;
+    border-color: #76ABAE;
+    width: 85px;
+    border-radius: 5px;
+    padding: 3px;
+    margin-top: 10px;
+}
+
+#map{
+    justify-content: center;
+    text-align: center;
+    border-style: solid;
+    border-radius: 5px;
+    border-color: rgb(40, 40, 40);
+    width: 750px;
+    margin: auto;
+    background-color: rgb(40, 40, 40);
+    margin-top: 15px;
+    height: 500px;
+    margin-bottom: 50px;
+}
