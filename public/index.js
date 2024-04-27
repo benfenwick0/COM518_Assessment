@@ -119,8 +119,9 @@ async function ajaxSearch(location){
             buttonElement.setAttribute("id", "buyButton");
             buttonElement.setAttribute("type", "button");
             buttonElement.setAttribute("value", "Book now");
+
             buttonElement.addEventListener ("click", async()=>{
-			
+
 
                 try{
                     const response = await fetch(`/book-accommodation`,{
@@ -158,13 +159,55 @@ async function ajaxSearch(location){
 
             const marker = L.marker([accom.latitude, accom.longitude])
                 .addTo(map)
-                .bindPopup(`<b>${accom.name}</b><br>${accom.description}`)
+                .bindPopup(`<b>${accom.name}</b><br>
+                ${accom.description}<br>
+                <label for="dateInput">Date:</label>
+                <input type="date" id="dateInput"><br>
+                <label for="numPeopleInput">Number of People:</label>
+                <input type="number" id="numPeopleInput" min="1" value="1"><br>
+                <button onclick="bookAccommodation(${accom.ID})">Book Now</button>
+                `)
                 .openPopup();
             markers.push(marker);
         
     });
     document.getElementById("searchFormdiv").style.width = '750px';
 };
+
+async function bookAccommodation(accommodationID) {
+    const date = document.getElementById('dateInput').value;
+    const numPeople = document.getElementById('numPeopleInput').value;
+
+    try {
+        const response = await fetch(`/book-accommodation-map`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                accommodation_id: accommodationID,
+                num_people: numPeople,
+                date: date
+            })
+        });
+
+        if (response.status == 200) {
+            alert("Successfully booked");
+        } else if (response.status == 400) {
+            const data = await response.json();
+            alert(data.error);
+        } else if (response.status == 404) {
+            alert("No place in that location");
+        } else if (response.status == 401) {
+            alert("User not logged in");
+        } else {
+            alert(`Unknown error: code ${response.status}`);
+        }
+    } catch (e) {
+        alert(`Error: ${e}`);
+    }
+}
+
 
 
 
