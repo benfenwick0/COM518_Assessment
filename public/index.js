@@ -1,6 +1,6 @@
 const loginStatus = async()=>{
     try{
-        const response = await fetch('/login');
+        const response = await fetch('/users/login');
         const data = await response.json();
 
         if (data.username == null){
@@ -26,7 +26,7 @@ document.getElementById("login_button").addEventListener("click", async ()=>{
     const password = document.getElementById('password').value;
 
     try{
-        const response = await fetch('/login',{
+        const response = await fetch('/users/login',{
             method: 'POST',
             headers:{
                 'Content-Type': 'application/json'
@@ -51,7 +51,7 @@ document.getElementById("login_button").addEventListener("click", async ()=>{
 
 document.getElementById("logout_Button").addEventListener("click", async ()=>{
     try{
-        const response = await fetch('/logout',{
+        const response = await fetch('/users/logout',{
             method: 'POST',
         });
 
@@ -206,7 +206,7 @@ async function bookAccommodation(accommodationID) {
     } catch (e) {
         alert(`Error: ${e}`);
     }
-}
+};
 
 
 
